@@ -1,36 +1,68 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:m_n_m_rider/screens/help_and_support_screen.dart';
-import 'package:m_n_m_rider/screens/home_page.dart';
-import 'package:m_n_m_rider/screens/order_drop_off.dart';
-import 'package:m_n_m_rider/screens/orders_page.dart';
-import 'package:m_n_m_rider/screens/profile_screen.dart';
-import 'package:m_n_m_rider/screens/rider_earning_screen.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:m_n_m_rider/utils/providers/user_provider.dart';
+import 'package:m_n_m_rider/utils/routes.dart';
+
+import 'package:nuts_activity_indicator/nuts_activity_indicator.dart';
+
+import 'screens/new_screens/on_boarding_screen.dart';
 
 void main() {
   runApp(const ProviderScope(child: MyApp()));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerStatefulWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
+  @override
+  ConsumerState<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends ConsumerState<MyApp> {
+  bool isLoading = true;
+
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   // Load user data from SharedPreferences on app start
+  //   ref.read(userProvider.notifier).loadUser().then((_) {
+  //     setState(() {
+  //       isLoading = false; // Set loading to false once user is loaded
+  //     });
+  //   });
+  // }
+
   @override
   Widget build(BuildContext context) {
+    final user = ref.watch(userProvider);
+
     return MaterialApp(
-      title: 'M&M Delivery App',
       debugShowCheckedModeBanner: false,
+      title: 'M&M Delivery Services',
+      home: const OnboardingScreen(),
+      // isLoading
+      //     ? const Scaffold(
+      //         body: Center(
+      //           child:
+      //               NutsActivityIndicator(), // Show loading spinner while checking user state
+      //         ),
+      //       )
+      //     : const OnboardingScreen(), //This should later be removed ...
+      // user != null
+      //     ? const DashboardPage() // Show dashboard if user is logged in
+      //     : const OnboardingScreen(), // Show onboarding if no user is found
       theme: ThemeData(
+        textTheme: GoogleFonts.poppinsTextTheme(
+          Theme.of(context).textTheme,
+        ),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.red.shade800),
         useMaterial3: true,
       ),
-      home: const RiderHomeScreen(),
+      onGenerateRoute: (settings) => onGenerateRoute(settings, ref),
     );
   }
 }
-
-
-
-
 
 
 
