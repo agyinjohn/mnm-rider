@@ -197,28 +197,31 @@ class _OTPScreenState extends State<OTPScreen> {
                       ),
                     ),
                     const SizedBox(height: 24),
-                    // Updated OTP Fields using flutter_otp_text_field package
-                    OtpTextField(
-                      numberOfFields: 6,
-                      borderColor: AppColors.backgroundColor,
-                      showFieldAsBox: true,
-                      enabledBorderColor: AppColors.backgroundColor,
-                      onCodeChanged: (String code) {
-                        // Handle validation or checks here
-                      },
-                      onSubmit: (String verificationCode) {
-                        // Automatically verifies when the user completes input
-                        // otpVerification();
 
-                        _showSuccessSheet(context);
-                        Future.delayed(const Duration(seconds: 1), () {
-                          Navigator.push(
-                              context,
-                              PageTransition(
-                                  child: const SignInScreen(),
-                                  type: PageTransitionType.rightToLeft));
-                        });
-                      },
+                    Expanded(
+                      child: OtpTextField(
+                        fieldWidth: 48,
+                        numberOfFields: 6,
+                        borderColor: Colors.black,
+                        showFieldAsBox: true,
+                        enabledBorderColor: Colors.black54,
+                        onCodeChanged: (String code) {
+                          // Handle validation or checks here
+                        },
+                        onSubmit: (String verificationCode) {
+                          // Automatically verifies when the user completes input
+                          // otpVerification();
+
+                          _showSuccessSheet(context);
+                          Future.delayed(const Duration(seconds: 1), () {
+                            Navigator.push(
+                                context,
+                                PageTransition(
+                                    child: const SignInScreen(),
+                                    type: PageTransitionType.rightToLeft));
+                          });
+                        },
+                      ),
                     ),
                     const SizedBox(height: 28),
                     CustomButton(

@@ -259,7 +259,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         const SizedBox(height: 24),
                         CustomButton(
                           onTap: () {
-                            // For dev purposes, must be removed later
+                            // For dev purposes, must be altered later
                             showSuccessSheet(context);
                             Future.delayed(const Duration(seconds: 3), () {
                               Navigator.push(

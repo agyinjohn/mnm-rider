@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:m_n_m_rider/screens/new_screens/dashboard_fragments/dashboard_page.dart';
 import 'package:nuts_activity_indicator/nuts_activity_indicator.dart';
 import 'package:page_transition/page_transition.dart';
 
@@ -114,12 +115,12 @@ class _SignInPageState extends ConsumerState<SignInScreen> {
                           fit: BoxFit.cover,
                         ),
                       ),
-                      const SizedBox(height: 8),
+                      SizedBox(height: size.height * 0.06),
                       const Text(
                         'Welcome back!',
                         style: TextStyle(
                           fontWeight: FontWeight.w900,
-                          fontSize: 20,
+                          fontSize: 28,
                         ),
                       ),
                       const SizedBox(height: 8),
@@ -134,6 +135,7 @@ class _SignInPageState extends ConsumerState<SignInScreen> {
                         prefixIcon: Icons.mail,
                         hintText: 'Enter your email or phone number',
                       ),
+                      SizedBox(height: size.height * 0.015),
                       CustomTextField(
                         controller: _controllerPassword,
                         isPassword: true,
@@ -157,13 +159,13 @@ class _SignInPageState extends ConsumerState<SignInScreen> {
                           ),
                         ),
                       ),
-                      const SizedBox(height: 16),
+                      SizedBox(height: size.height * 0.03),
                       CustomButton(
                           onTap: () {
                             Navigator.pushAndRemoveUntil(
                               context,
                               PageTransition(
-                                child: const RiderHomeScreen(),
+                                child: const DashboardPage(),
                                 // KycVerificationScreen(),
                                 type: PageTransitionType.bottomToTop,
                                 duration: const Duration(milliseconds: 1000),

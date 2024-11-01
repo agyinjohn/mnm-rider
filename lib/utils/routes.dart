@@ -11,9 +11,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:page_transition/page_transition.dart';
 
 import '../screens/new_screens/customized_ui_image_picker.dart';
+import '../screens/new_screens/dashboard_fragments/dashboard_page.dart';
 import '../screens/new_screens/face_id_page.dart';
 import '../screens/new_screens/home_page.dart';
 import '../screens/new_screens/on_boarding_screen.dart';
+import '../screens/new_screens/sign_in_screen.dart';
 import '../screens/new_screens/sign_up_screen.dart';
 import '../screens/new_screens/upload_id_page.dart';
 import '../screens/new_screens/verification_page.dart';
@@ -30,6 +32,11 @@ Route<dynamic> onGenerateRoute(RouteSettings setting, WidgetRef ref) {
       return PageTransition(
           duration: const Duration(milliseconds: 1000),
           child: const SignUpScreen(),
+          type: PageTransitionType.rightToLeft);
+    case SignInScreen.routeName:
+      return PageTransition(
+          duration: const Duration(milliseconds: 1000),
+          child: const SignInScreen(),
           type: PageTransitionType.rightToLeft);
 
     case RiderHomeScreen.routeName:
@@ -85,6 +92,9 @@ Route<dynamic> onGenerateRoute(RouteSettings setting, WidgetRef ref) {
       return PageTransition(
           child: const NotificationsPage(),
           type: PageTransitionType.rightToLeft);
+    case DashboardPage.routeName:
+      return PageTransition(
+          child: const DashboardPage(), type: PageTransitionType.rightToLeft);
     default:
       return MaterialPageRoute(
           builder: (_) => const Center(
