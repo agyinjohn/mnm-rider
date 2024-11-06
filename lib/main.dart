@@ -6,6 +6,7 @@ import 'package:m_n_m_rider/utils/routes.dart';
 
 import 'package:nuts_activity_indicator/nuts_activity_indicator.dart';
 
+import 'screens/new_screens/dashboard_fragments/dashboard_page.dart';
 import 'screens/new_screens/on_boarding_screen.dart';
 
 void main() {
@@ -40,7 +41,9 @@ class _MyAppState extends ConsumerState<MyApp> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'M&M Delivery Services',
-      home: const OnboardingScreen(),
+      home: const DashboardPage(),
+      // const OnboardingScreen(),
+
       // isLoading
       //     ? const Scaffold(
       //         body: Center(

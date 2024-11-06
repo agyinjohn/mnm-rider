@@ -34,7 +34,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         context: context,
         isScrollControlled: true,
         backgroundColor: Colors.transparent,
-        builder: (context) => const SuccessSheet(
+        builder: (context) => SuccessSheet(
           title: 'Email Verified Successfully',
           message:
               'An OPT (One-Time Password) has been sent to your regiestered email address/phone number.',

@@ -16,5 +16,7 @@ class AppColors {
 
   static const Color cardColor = Color.fromARGB(255, 217, 217, 217);
   static const Color errorColor = Color(0xFFB00020);
+  static const Color errorColor2 = Color.fromARGB(255, 204, 51, 0);
+
   static const Color onPrimaryColor = Color(0xFFFFFFFF);
 }

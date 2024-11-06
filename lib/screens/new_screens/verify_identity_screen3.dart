@@ -26,7 +26,7 @@ class _VerifyIdentityScreen3State extends State<VerifyIdentityScreen3> {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => const SuccessSheet(
+      builder: (context) => SuccessSheet(
         title: 'Continue to Dashboard',
         message:
             'Your account will be verified soon.\nYou can start uploading your products.',

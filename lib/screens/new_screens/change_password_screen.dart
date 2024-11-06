@@ -51,7 +51,7 @@ class _OTPScreenState extends State<ChangePasswordScreen> {
         context: context,
         isScrollControlled: true,
         backgroundColor: Colors.transparent,
-        builder: (context) => const SuccessSheet(
+        builder: (context) => SuccessSheet(
           title: 'Password Changed Successfully',
           message:
               'You can now use your new password to log in to your account.',

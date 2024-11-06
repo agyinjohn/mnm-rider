@@ -133,7 +133,7 @@ class _OTPScreenState extends State<OTPScreen> {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => const SuccessSheet(
+      builder: (context) => SuccessSheet(
         title: 'OTP Verified Successfully',
         message: 'Your OTP(One Time Password) has been verified successfully.',
         buttonText: 'Continue',
