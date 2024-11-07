@@ -4,11 +4,11 @@ import 'package:iconly/iconly.dart';
 import 'package:m_n_m_rider/screens/new_screens/dashboard_fragments/communities_fragment.dart';
 
 import '../../../commons/app_colors.dart';
-import 'analytics_fragment.dart';
+import 'active_map_fragment.dart';
 import 'home_fragment.dart';
 import 'orders_fragment.dart';
 import 'profile_fragment.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+// import 'package:flutter_svg/flutter_svg.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -37,13 +37,13 @@ class _DashboardPageState extends State<DashboardPage> {
       'icon': const Icon(Icons.star),
       'icon_active': const Icon(IconlyBold.star),
       'label': 'Orders',
-      'fragment': const CommunitiesFragment(),
+      'fragment': const OrdersFragment(),
     },
     {
-      'icon': const Icon(IconlyLight.work),
-      'icon_active': const Icon(IconlyBold.work),
-      'label': 'Analytics',
-      'fragment': const AnalyticsFragment(),
+      'icon': const Icon(IconlyLight.graph),
+      'icon_active': const Icon(IconlyBold.graph),
+      'label': 'Map',
+      'fragment': const ActiveMapFragment(),
     },
     {
       'icon': const Icon(IconlyBroken.profile),

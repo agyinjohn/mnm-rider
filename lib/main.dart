@@ -59,7 +59,8 @@ class _MyAppState extends ConsumerState<MyApp> {
         textTheme: GoogleFonts.poppinsTextTheme(
           Theme.of(context).textTheme,
         ),
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.red.shade800),
+        colorScheme: ColorScheme.fromSeed(
+            seedColor: const Color.fromARGB(255, 252, 99, 43)),
         useMaterial3: true,
       ),
       onGenerateRoute: (settings) => onGenerateRoute(settings, ref),

@@ -4,16 +4,18 @@ import '../commons/app_colors.dart';
 import 'custom_button.dart';
 
 class SuccessSheet extends StatelessWidget {
-  final String title, message, buttonText, onTapNavigation;
+  final String title, message, buttonText;
+  String onTapNavigation, image;
   bool confirmed;
 
   SuccessSheet(
       {super.key,
       this.confirmed = false,
+      this.image = 'assets/images/offline.png',
       required this.title,
       required this.message,
-      required this.buttonText,
-      required this.onTapNavigation});
+      this.buttonText = '',
+      this.onTapNavigation = '/dashboard'});
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +59,7 @@ class SuccessSheet extends StatelessWidget {
               : SizedBox(
                   height: 88,
                   width: 88,
-                  child: Image.asset('assets/images/offline.png'),
+                  child: Image.asset(image),
                 ),
           const SizedBox(height: 16),
           Text(
@@ -77,10 +79,11 @@ class SuccessSheet extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 16),
-          CustomButton(
-            onTap: () => Navigator.pushNamed(context, onTapNavigation),
-            title: buttonText,
-          ),
+          if (buttonText.isNotEmpty)
+            CustomButton(
+              onTap: () => Navigator.pushNamed(context, onTapNavigation),
+              title: buttonText,
+            ),
         ],
       ),
     );
