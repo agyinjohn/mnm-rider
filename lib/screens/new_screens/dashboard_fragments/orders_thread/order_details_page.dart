@@ -1,12 +1,15 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:iconly/iconly.dart';
+import 'package:m_n_m_rider/screens/new_screens/dashboard_fragments/active_maps_thread/map_screen.dart';
 import 'package:m_n_m_rider/widgets/custom_button.dart';
 import '../../../../commons/app_colors.dart';
 import '../../../../models/order_item.dart';
 import '../../../../widgets/custom_bottom_sheet.dart';
 import '../../../../widgets/order_item_detail.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class OrderDetailPage extends StatefulWidget {
   final String orderNumber, customerName, number;
@@ -23,6 +26,43 @@ class OrderDetailPage extends StatefulWidget {
 }
 
 class _OrderDetailPageState extends State<OrderDetailPage> {
+  GoogleMapController? _controller;
+
+  // Getting the current location
+  Future<LatLng> getCurrentLocation() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    // Test if location services are enabled.
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      // Location services are not enabled, return default location
+      return const LatLng(6.7296388965779785, -1.6601084660966479);
+    }
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        // Permissions are denied, return default location
+        return const LatLng(6.7296388965779785, -1.6601084660966479);
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      // Permissions are denied forever, return default location
+      return const LatLng(6.7296388965779785, -1.6601084660966479);
+    }
+
+    Position position = await Geolocator.getCurrentPosition();
+    return LatLng(position.latitude, position.longitude);
+  }
+
+  CameraPosition _initialPosition = const CameraPosition(
+    target: LatLng(6.7296388965779785, -1.6601084660966479),
+    zoom: 16,
+  );
+
   final List<OrderItem> _orderItems = [
     OrderItem(
         orderId: '0001',
@@ -101,7 +141,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                 setState(() {
                   isOrderCollected = true;
                 });
-                Navigator.of(context).pop(); // Close the dialog
+                Navigator.of(context).pop();
               },
               child: const Text(
                 'Yes',
@@ -133,9 +173,8 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
         message: isCustomerConfirmed
             ? 'Order successfully delivered!\nGreat work, continue to your next delivery.'
             : 'Please wait for customer to confirm that package has been received.',
-        buttonText:
-            isCustomerConfirmed ? 'Continue' : 'After Customer Approves',
-        // onTapNavigation: '/dashboard',
+        buttonText: isCustomerConfirmed ? 'Continue' : '',
+        onTapNavigation: '/dashboard',
       ),
     ).whenComplete(() {
       setState(() {
@@ -165,7 +204,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
             TextButton(
               onPressed: () {
                 setState(() {
-                  // isOrderDelivered = true;
+                  isOrderDelivered = true;
                   // _isBottomSheetVisible = true;
                   Navigator.of(context).pop(); // Close the dialog
                   showSuccessSheet(context);
@@ -402,24 +441,76 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
 
                     // Map
 
-                    Container(
-                      width: double.infinity,
-                      height: size.height * 0.22,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(6),
-                          color: AppColors.cardColor),
-                      child: Padding(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: size.width * 0.025),
-                          child: const Center(
-                            child: Text('Map Showing the location of the user'),
-                          )),
+                    Stack(
+                      children: [
+                        Hero(
+                          tag: 'mapHero',
+                          child: Container(
+                            height: size.height * 0.3,
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              color: Colors.grey.shade200,
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(12),
+                              child: GoogleMap(
+                                initialCameraPosition: _initialPosition,
+                                onMapCreated: (GoogleMapController controller) {
+                                  _controller = controller;
+                                },
+                                myLocationButtonEnabled: true,
+                                myLocationEnabled: true,
+                              ),
+                            ),
+                          ),
+                        ),
+
+                        // To expand the map
+                        Positioned(
+                          top: 8,
+                          right: 8,
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const MapScreen(),
+                                ),
+                              );
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 4,
+                                horizontal: 8,
+                              ),
+                              decoration: BoxDecoration(
+                                color: AppColors.primaryColor,
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                              child: const Text(
+                                'Expand Map',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
 
                     SizedBox(height: size.height * 0.015),
 
                     // Button to confirm collection of order item from store
                     CustomButton(
+                        onLongPress: () {
+                          setState() {
+                            isCustomerConfirmed = true;
+                            showSuccessSheet(context);
+                          }
+                        },
                         onTap: () {
                           isOrderCollected
                               ? confirmOrderDelivery(context)

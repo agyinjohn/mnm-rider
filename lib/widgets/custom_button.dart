@@ -6,10 +6,12 @@ import '../commons/app_colors.dart';
 
 class CustomButton extends StatelessWidget {
   final VoidCallback onTap;
+  final VoidCallback? onLongPress;
   final String title;
 
   const CustomButton({
     super.key,
+    this.onLongPress,
     required this.onTap,
     required this.title,
   });
@@ -17,6 +19,7 @@ class CustomButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      onLongPress: onLongPress,
       onTap: onTap,
       child: Container(
         height: 55,

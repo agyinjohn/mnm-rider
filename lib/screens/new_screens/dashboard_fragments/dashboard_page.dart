@@ -4,9 +4,10 @@ import 'package:iconly/iconly.dart';
 import 'package:m_n_m_rider/screens/new_screens/dashboard_fragments/communities_fragment.dart';
 
 import '../../../commons/app_colors.dart';
-import 'active_map_fragment.dart';
+// import 'active_map_fragment.dart';
 import 'home_fragment.dart';
 import 'orders_fragment.dart';
+import 'active_map_fragment.dart';
 import 'profile_fragment.dart';
 // import 'package:flutter_svg/flutter_svg.dart';
 
