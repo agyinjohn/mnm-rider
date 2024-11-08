@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:m_n_m_rider/screens/map_navigation.dart';
+import 'package:m_n_m_rider/screens/old_screens/map_navigation.dart';
 
 class RiderHomePage extends StatefulWidget {
   const RiderHomePage({super.key});
