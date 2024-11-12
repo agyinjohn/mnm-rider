@@ -72,8 +72,6 @@ class _SwipeToConfirmState extends State<SwipeToConfirm>
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(
-            // mainAxisAlignment: MainAxisAlignment.start,
-
             children: [
               SizedBox(height: size.height * 0.08),
               Text('Incoming Order',
@@ -126,12 +124,16 @@ class _SwipeToConfirmState extends State<SwipeToConfirm>
                   padding: const EdgeInsets.symmetric(
                       horizontal: 20.0, vertical: 20.0),
                   child: SlideAction(
-                    text: 'Slide to accept order',
+                    text: 'Slide to view order',
                     textStyle: const TextStyle(
                       color: Colors.black,
                       fontSize: 16,
                     ),
                     outerColor: Colors.grey[400]!,
+                    submittedIcon: const Icon(
+                      Icons.check,
+                      color: Colors.black,
+                    ),
                     innerColor: Colors.white,
                     sliderButtonIcon: const Icon(
                       Icons.arrow_forward_ios_rounded,
