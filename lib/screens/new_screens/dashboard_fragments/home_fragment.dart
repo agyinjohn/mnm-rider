@@ -115,7 +115,8 @@ class _HomeFragmentState extends ConsumerState<HomeFragment> {
                     ),
                     position: BadgePosition.topEnd(top: -10, end: -6),
                     child: GestureDetector(
-                      onTap: () {},
+                      onTap: () =>
+                          Navigator.pushNamed(context, '/notifications-page'),
                       child: const Icon(
                         IconlyLight.notification,
                       ),

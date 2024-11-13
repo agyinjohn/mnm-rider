@@ -12,6 +12,8 @@ import 'package:page_transition/page_transition.dart';
 
 import '../screens/new_screens/customized_ui_image_picker.dart';
 import '../screens/new_screens/dashboard_fragments/dashboard_page.dart';
+import '../screens/new_screens/dashboard_fragments/home_thread/notifications_page.dart';
+import '../screens/new_screens/dashboard_fragments/profile_thread/edit_profile_page.dart';
 import '../screens/new_screens/face_id_page.dart';
 import '../screens/new_screens/home_page.dart';
 import '../screens/new_screens/on_boarding_screen.dart';
@@ -19,7 +21,6 @@ import '../screens/new_screens/sign_in_screen.dart';
 import '../screens/new_screens/sign_up_screen.dart';
 import '../screens/new_screens/upload_id_page.dart';
 import '../screens/new_screens/verification_page.dart';
-import '../screens/old_screens/notification_page.dart';
 import '../widgets/bussiness_info.dart';
 import 'providers/provider.dart';
 
@@ -90,15 +91,23 @@ Route<dynamic> onGenerateRoute(RouteSettings setting, WidgetRef ref) {
           type: PageTransitionType.rightToLeft);
     case NotificationsPage.routeName:
       return PageTransition(
-          child: const NotificationsPage(),
-          type: PageTransitionType.rightToLeft);
+          child: NotificationsPage(), type: PageTransitionType.rightToLeft);
     case DashboardPage.routeName:
       return PageTransition(
           child: const DashboardPage(), type: PageTransitionType.rightToLeft);
+    case EditProfilePage.routeName:
+      return PageTransition(
+          child: const EditProfilePage(), type: PageTransitionType.rightToLeft);
     default:
       return MaterialPageRoute(
-          builder: (_) => const Center(
-                child: Text('Page does not exist'),
+          builder: (_) => Scaffold(
+                appBar: AppBar(
+                  centerTitle: true,
+                  title: const Text('Page not found'),
+                ),
+                body: const Center(
+                  child: Text('Page does not exist'),
+                ),
               ));
   }
 }
