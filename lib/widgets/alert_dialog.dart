@@ -2,15 +2,17 @@ import 'package:flutter/material.dart';
 import '../commons/app_colors.dart';
 
 class CustomAlertDialog extends StatelessWidget {
-  final String leftButtonText, rightButtonText, title;
+  final String title;
+  String leftButtonText, rightButtonText;
   final Widget body;
-  final VoidCallback onTapLeft, onTapRight;
+  final VoidCallback onTapRight;
+  VoidCallback? onTapLeft;
 
-  const CustomAlertDialog({
+  CustomAlertDialog({
     super.key,
-    required this.leftButtonText,
-    required this.rightButtonText,
-    required this.onTapLeft,
+    this.leftButtonText = 'No',
+    this.rightButtonText = 'Yes',
+    this.onTapLeft,
     required this.onTapRight,
     required this.title,
     required this.body,
@@ -42,7 +44,9 @@ class CustomAlertDialog extends StatelessWidget {
               child: GestureDetector(
                 onTap: () {
                   Navigator.of(context).pop();
-                  onTapLeft();
+                  // if (onTapLeft != null) {
+                  //   onTapLeft!();
+                  // }
                 },
                 child: Container(
                   height: size.height * 0.04,
@@ -50,12 +54,12 @@ class CustomAlertDialog extends StatelessWidget {
                     borderRadius: BorderRadius.circular(6),
                     color: AppColors.errorColor,
                   ),
-                  child: Center(
+                  child: const Center(
                     child: Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: EdgeInsets.all(8.0),
                       child: Text(
-                        leftButtonText,
-                        style: const TextStyle(
+                        'No',
+                        style: TextStyle(
                           fontSize: 15,
                           color: AppColors.onPrimaryColor,
                           fontWeight: FontWeight.bold,
@@ -79,12 +83,12 @@ class CustomAlertDialog extends StatelessWidget {
                     borderRadius: BorderRadius.circular(6),
                     color: Colors.green,
                   ),
-                  child: Center(
+                  child: const Center(
                     child: Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: EdgeInsets.all(8.0),
                       child: Text(
-                        rightButtonText,
-                        style: const TextStyle(
+                        'Yes',
+                        style: TextStyle(
                           fontSize: 15,
                           color: AppColors.onPrimaryColor,
                           fontWeight: FontWeight.bold,
@@ -106,9 +110,9 @@ void showCustomAlertDialog({
   required BuildContext context,
   required String title,
   required Widget body,
-  required String leftButtonText,
-  required String rightButtonText,
-  required VoidCallback onTapLeft,
+  String leftButtonText = 'No',
+  String rightButtonText = 'Yes',
+  VoidCallback? onTapLeft,
   required VoidCallback onTapRight,
 }) {
   showDialog(
@@ -119,7 +123,7 @@ void showCustomAlertDialog({
         body: body,
         leftButtonText: leftButtonText,
         rightButtonText: rightButtonText,
-        onTapLeft: onTapLeft,
+        onTapLeft: onTapLeft ?? () => Navigator.of(context).pop(),
         onTapRight: onTapRight,
       );
     },

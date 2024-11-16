@@ -287,7 +287,11 @@ class _HomeFragmentState extends ConsumerState<HomeFragment> {
                 ),
               ),
               SizedBox(height: size.height * 0.024),
-              CustomButton(onTap: () {}, title: 'Request Withdrawal'),
+              CustomButton(
+                  onTap: () {
+                    Navigator.pushNamed(context, '/request-withdrawal');
+                  },
+                  title: 'Request Withdrawal'),
               SizedBox(height: size.height * 0.024),
               Text(
                 'Orders Summary',

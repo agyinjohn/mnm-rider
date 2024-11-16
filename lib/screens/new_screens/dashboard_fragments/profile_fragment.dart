@@ -1,6 +1,7 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
-// import 'package:mnm_vendor/screens/dashboard_fragments/verification_page.dart';
 import 'package:iconly/iconly.dart';
+import 'package:m_n_m_rider/widgets/alert_dialog.dart';
 import '../../../commons/app_colors.dart';
 
 class ProfileFragment extends StatefulWidget {
@@ -12,6 +13,7 @@ class ProfileFragment extends StatefulWidget {
 
 class _ProfileFragmentState extends State<ProfileFragment> {
   final bool isAccountSetupComplete = true;
+  bool _isBottomSheetVisible = false;
 
   @override
   Widget build(BuildContext context) {
@@ -43,10 +45,11 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                 Center(
                     child: Column(
                   children: [
-                    Image.asset('assets/images/main-logo.png',
-                        height: size.width * 0.22,
-                        width: size.width * 0.22,
-                        fit: BoxFit.cover),
+                    CircleAvatar(
+                      radius: size.width * 0.10,
+                      backgroundImage:
+                          const AssetImage('assets/images/profile-pic.png'),
+                    ),
                     Text(
                       'John Kwaku Agyin',
                       style: theme.titleSmall
@@ -110,13 +113,43 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                   context,
                   'assets/images/card-payment.png',
                   'Payment methods',
-                  () {},
+                  () {
+                    Navigator.pushNamed(context, '/payment-methods');
+                  },
                 ),
                 _buildInformation(
                   context,
                   'assets/images/waste.png',
                   'Remove account',
-                  () {},
+                  () {
+                    setState(() {
+                      _isBottomSheetVisible = true;
+                    });
+                    showCustomAlertDialog(
+                      context: context,
+                      title: 'Remove Account',
+                      body: const Text(
+                          'Are you sure you want to remove your account?'),
+                      onTapLeft: () {
+                        setState(() {
+                          _isBottomSheetVisible = false;
+                        });
+                        Navigator.pop(context);
+                      },
+                      onTapRight: () {
+                        setState(() {
+                          _isBottomSheetVisible = false;
+                        });
+                        Navigator.pushNamed(context, '/remove-account');
+                        // Navigator.pop(context); // Close the dialog
+                        // ScaffoldMessenger.of(context).showSnackBar(
+                        //   const SnackBar(
+                        //     content: Text('Account deleted successfully'),
+                        //   ),
+                        // );
+                      },
+                    );
+                  },
                 ),
                 SizedBox(height: size.height * 0.028),
                 const Divider(),
@@ -182,8 +215,6 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                     ),
                     ElevatedButton(
                       onPressed: () {
-                        // Navigator.pushNamed(
-                        //     context, KycVerificationScreen.routeName);
                         // Navigate to account setup page or trigger setup action
                       },
                       style: ElevatedButton.styleFrom(
@@ -203,6 +234,15 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                 ),
               ),
             ),
+
+          // Blurred background when bottom sheet is visible
+          if (_isBottomSheetVisible)
+            BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
+              child: Container(
+                color: Colors.black.withOpacity(0.2),
+              ),
+            ),
         ],
       ),
     );
@@ -210,7 +250,7 @@ class _ProfileFragmentState extends State<ProfileFragment> {
 
   Widget _buildInformation(BuildContext ctx, String imageUrl,
       String description, VoidCallback onTap) {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.of(ctx).size;
     return GestureDetector(
       onTap: onTap,
       child: Row(
