@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
+import 'package:m_n_m_rider/widgets/custom_snackbar.dart';
 
 import 'package:page_transition/page_transition.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -64,24 +65,28 @@ class AuthNotifier extends StateNotifier<AuthState> {
       if (response.statusCode == 200) {
         // Parse the response
         final data = jsonDecode(response.body);
+        print(data);
         String token = data['token'];
         Map<String, dynamic> user = data['user'];
 
         // Save the token and user data to SharedPreferences
         SharedPreferences prefs = await SharedPreferences.getInstance();
-
+        await prefs.setBool('isUser', true);
         await prefs.setString('token', token);
 
-        User userData = User(
-            id: user['_id'],
-            name: user['name'],
-            email: user['email'],
-            phoneNumber: user['phoneNumber'],
-            role: user['role']);
-        ref.read(userProvider.notifier).saveUser(userData);
-        print(userData.email);
+        // User userData = User(
+        //     id: user['_id'],
+        //     name: user['name'],
+        //     email: user['email'],
+        //     phoneNumber: user['phoneNumber'],
+        //     role: user['role']);
+        // ref.read(userProvider.notifier).saveUser(userData);
+        // print(userData.email);
         // Update state to indicate login success
-        state = state.copyWith(isLoading: false, loggedIn: true);
+        state = state.copyWith(
+          isLoading: false,
+          loggedIn: true,
+        );
         Navigator.pushAndRemoveUntil(
           context,
           PageTransition(
@@ -100,12 +105,14 @@ class AuthNotifier extends StateNotifier<AuthState> {
           isLoading: false,
           error: errorData['message'],
         );
+        showCustomSnackbar(context: context, message: state.error!);
         return false;
       } else {
         state = state.copyWith(
           isLoading: false,
           error: 'Unexpected status code ${response.statusCode}',
         );
+        showCustomSnackbar(context: context, message: state.error!);
         return false;
       }
     } on TimeoutException catch (_) {
@@ -113,13 +120,15 @@ class AuthNotifier extends StateNotifier<AuthState> {
         isLoading: false,
         error: 'The connection has timed out, please try again',
       );
+      showCustomSnackbar(context: context, message: state.error!);
       return false;
     } catch (e) {
       state = state.copyWith(
         isLoading: false,
         error: 'Error during login: $e',
       );
-      print(e);
+      showCustomSnackbar(context: context, message: state.error!);
+      // print(e);
       return false;
     }
     // finally {

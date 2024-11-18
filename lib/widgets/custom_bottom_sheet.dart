@@ -11,7 +11,7 @@ class SuccessSheet extends StatelessWidget {
   SuccessSheet(
       {super.key,
       this.confirmed = false,
-      this.image = 'assets/images/offline.png',
+      this.image = 'assets/images/Verification.png',
       required this.title,
       required this.message,
       this.buttonText = '',

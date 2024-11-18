@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:m_n_m_rider/screens/new_screens/on_boarding_screen.dart';
+import 'package:m_n_m_rider/screens/new_screens/sign_in_screen.dart';
 import 'package:m_n_m_rider/utils/providers/user_provider.dart';
 import 'package:m_n_m_rider/utils/routes.dart';
-
 import 'package:nuts_activity_indicator/nuts_activity_indicator.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
 import 'screens/new_screens/dashboard_fragments/dashboard_page.dart';
-import 'screens/new_screens/on_boarding_screen.dart';
 
 void main() {
   runApp(const ProviderScope(child: MyApp()));
@@ -21,40 +22,81 @@ class MyApp extends ConsumerStatefulWidget {
 }
 
 class _MyAppState extends ConsumerState<MyApp> {
-  bool isLoading = true;
+  // bool isLoading = true;
+
+  // //  bool isLoading = true;
 
   // @override
   // void initState() {
   //   super.initState();
   //   // Load user data from SharedPreferences on app start
-  //   ref.read(userProvider.notifier).loadUser().then((_) {
-  //     setState(() {
-  //       isLoading = false; // Set loading to false once user is loaded
-  //     });
+  //   getUserToken();
+  // }
+
+  // getUserToken() async {
+  //   await ref.read(authProvider.notifier).loadToken();
+  //   setState(() {
+  //     isLoading = false; // Set loading to false once user is loaded
   //   });
   // }
+  bool isTokenValid = false;
+  String? userRole;
+  bool isloading = true;
+  bool isUser = false;
+  @override
+  void initState() {
+    super.initState();
+    // authService.getUserData(context);
+    checkTokenValidity();
+  }
+
+  Future<void> checkTokenValidity() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    final isUserLoggedIn = preferences.getBool('isUser') ?? false;
+    final token = preferences.getString('token');
+    setState(() {
+      isloading = true;
+      isUser = isUserLoggedIn;
+    });
+    try {
+      if (token != null && !JwtDecoder.isExpired(token)) {
+        // Decode token to get user role
+        final decodedToken = JwtDecoder.decode(token);
+        setState(() {
+          isTokenValid = true;
+          userRole =
+              decodedToken['role']; // Assuming 'role' is in the token payload
+          isloading = false;
+        });
+      }
+    } catch (e) {
+      setState(() {
+        isTokenValid = false;
+        isloading = false;
+      });
+    } finally {
+      setState(() {
+        isloading = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    final user = ref.watch(userProvider);
-
+    // final user = ref.watch(authProvider.notifier).isAuthenticated();
+    // print(user)
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'M&M Delivery Services',
-      home: const DashboardPage(),
-      // const OnboardingScreen(),
-
-      // isLoading
-      //     ? const Scaffold(
-      //         body: Center(
-      //           child:
-      //               NutsActivityIndicator(), // Show loading spinner while checking user state
-      //         ),
-      //       )
-      //     : const OnboardingScreen(), //This should later be removed ...
-      // user != null
-      //     ? const DashboardPage() // Show dashboard if user is logged in
-      //     : const OnboardingScreen(), // Show onboarding if no user is found
+      home: isTokenValid
+          ? (userRole == 'dispatcher'
+              ? const DashboardPage()
+              : const SignInScreen())
+          : isloading
+              ? const Scaffold(body: Center(child: NutsActivityIndicator()))
+              : isUser
+                  ? const SignInScreen()
+                  : const OnboardingScreen(),
       theme: ThemeData(
         textTheme: GoogleFonts.poppinsTextTheme(
           Theme.of(context).textTheme,

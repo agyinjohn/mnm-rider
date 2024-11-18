@@ -26,7 +26,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 60,
+      height: 70,
       child: TextFormField(
         // Changed to TextFormField
         controller: widget.controller,

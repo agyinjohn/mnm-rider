@@ -96,6 +96,7 @@
 
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:m_n_m_rider/widgets/custom_snackbar.dart';
 // import 'package:mnm_vendor/screens/otp_screen.dart';
 // import 'package:mnm_vendor/screens/sign_in_screen.dart';
 // import 'package:mnm_vendor/utils/authentication.dart';
@@ -139,12 +140,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
   Future<void> _signup() async {
     // Validate form fields
     if (_formKey.currentState!.validate()) {
-      if (_passwordController.text != _confirmPasswordController.text) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Passwords do not match")),
-        );
-        return;
-      }
+      // if (_passwordController.text != _confirmPasswordController.text) {
+      //   ScaffoldMessenger.of(context).showSnackBar(
+      //     const SnackBar(content: Text("Passwords do not match")),
+      //   );
+      //   return;
+      // }
 
       setState(() {
         _isLoading = true;
@@ -154,7 +155,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       String? result = await _authentication.signup(
           email: _emailController.text.trim(),
           password: _passwordController.text.trim(),
-          role: 'vendor',
+          role: 'dispatcher',
           phoneNumber: _phoneController.text.trim(),
           name: _nameController.text.trim());
       if (result == 'Signup Successful') {
@@ -176,9 +177,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
         _nameController.text = '';
       }
       // Show result message
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(result ?? 'Unknown error')),
-      );
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   SnackBar(
+      //     backgroundColor: Colors.red,
+      //     content: Text(result ?? 'Unknown error'),
+      //     duration: const Duration(seconds: 10),
+      //   ),
+      // );
+      showCustomSnackbar(
+          context: context,
+          message: result ?? "Unknown error",
+          duration: const Duration(seconds: 10),
+          backgroundColor: Colors.red);
 
       setState(() {
         _isLoading = false;
@@ -311,6 +321,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             if (value == null || value.isEmpty) {
                               return 'Email cannot be empty';
                             }
+                            if (!RegExp(r'^[^@]+@[^@]+\.[^@]+')
+                                .hasMatch(value)) {
+                              return "Enter a valid email";
+                            }
                             return null;
                           },
                         ),
@@ -349,26 +363,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             if (value == null || value.isEmpty) {
                               return 'Confirm password cannot be empty';
                             }
+                            if (value != _passwordController.text) {
+                              return 'Passwords are not equall';
+                            }
+
                             return null;
                           },
                         ),
                         const SizedBox(height: 24),
                         CustomButton(
-                          onTap: () {
-                            // For dev purposes, must be altered later
-                            showSuccessSheet(context);
-                            Future.delayed(const Duration(seconds: 3), () {
-                              Navigator.push(
-                                  context,
-                                  PageTransition(
-                                      child: const OTPScreen(),
-                                      type: PageTransitionType.rightToLeft));
-                            });
-                          },
-                          // _signup, // Call the signup function
+                          onTap: _signup,
                           title: 'Sign Up',
                         ),
-                        const SizedBox(height: 62),
+                        const SizedBox(height: 20),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -406,7 +413,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 child: Container(
                   height: 50,
                   width: 50,
-                  color: Colors.transparent,
+                  decoration: BoxDecoration(
+                      color: Colors.black,
+                      borderRadius: BorderRadius.circular(5)),
+                  // color: Colors.transparent,
                   child: const NutsActivityIndicator(),
                 ),
               ),

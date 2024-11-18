@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 // import 'package:flutter/services.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:nuts_activity_indicator/nuts_activity_indicator.dart';
@@ -76,13 +77,19 @@ class _OTPScreenState extends State<OTPScreen> {
       } else {
         // Handle OTP verification failure
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Invalid OTP, please try again.')),
+          const SnackBar(
+            content: Text('Invalid OTP, please try again.'),
+            duration: Duration(seconds: 10),
+          ),
         );
       }
     } catch (error) {
       // Handle error during verification
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error during OTP verification: $error')),
+        SnackBar(
+          content: Text('Error during OTP verification: $error'),
+          duration: const Duration(seconds: 10),
+        ),
       );
     } finally {
       setState(() {
@@ -198,46 +205,94 @@ class _OTPScreenState extends State<OTPScreen> {
                     ),
                     const SizedBox(height: 24),
 
-                    Expanded(
-                      child: OtpTextField(
-                        fieldWidth: 48,
-                        numberOfFields: 6,
-                        borderColor: Colors.black,
-                        showFieldAsBox: true,
-                        enabledBorderColor: Colors.black54,
-                        onCodeChanged: (String code) {
-                          // Handle validation or checks here
-                        },
-                        onSubmit: (String verificationCode) {
-                          // Automatically verifies when the user completes input
-                          // otpVerification();
+                    // Expanded(
+                    //   child: OtpTextField(
+                    //     fieldWidth: 45,
+                    //     numberOfFields: 6,
+                    //     borderColor: Colors.black,
+                    //     showFieldAsBox: true,
+                    //     enabledBorderColor: Colors.black54,
+                    //     onCodeChanged: (String code) {
+                    //       // Handle validation or checks here
+                    //     },
+                    //     onSubmit: (String verificationCode) async {
+                    //       await otpVerification();
+                    //       // print(verificationCode);
+                    //       // Automatically verifies when the user completes input
+                    //       // otpVerification();
 
-                          _showSuccessSheet(context);
-                          Future.delayed(const Duration(seconds: 1), () {
-                            Navigator.push(
-                                context,
-                                PageTransition(
-                                    child: const SignInScreen(),
-                                    type: PageTransitionType.rightToLeft));
-                          });
-                        },
-                      ),
+                    //       // _showSuccessSheet(context);
+                    //       // Future.delayed(const Duration(seconds: 1), () {
+                    //       //   Navigator.push(
+                    //       //       context,
+                    //       //       PageTransition(
+                    //       //           child: const SignInScreen(),
+                    //       //           type: PageTransitionType.rightToLeft));
+                    //       // });
+                    //     },
+                    //   ),
+                    // ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: List.generate(6, (index) {
+                        return Container(
+                          width: 40,
+                          margin: const EdgeInsets.symmetric(horizontal: 5),
+                          child: TextField(
+                            controller: _controllers[index],
+                            focusNode: _focusNodes[index],
+                            maxLength: 1,
+                            keyboardType: TextInputType.number,
+                            textAlign: TextAlign.center,
+                            decoration: const InputDecoration(
+                              counterText: '', // Hides the length counter
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.black54),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.black),
+                              ),
+                            ),
+                            onChanged: (value) {
+                              _handleInput(index); // Handle focus movement
+                              if (_controllers.every(
+                                  (controller) => controller.text.isNotEmpty)) {
+                                otpVerification(); // Automatically verify when all fields are filled
+                              }
+                            },
+                            onSubmitted: (_) => _handleInput(index),
+                            // Detect paste events
+                            inputFormatters: [
+                              TextInputFormatter.withFunction(
+                                  (oldValue, newValue) {
+                                // Check if the pasted text is 6 digits long
+                                if (newValue.text.length == 6) {
+                                  _handlePaste(newValue.text);
+                                }
+                                return newValue;
+                              }),
+                            ],
+                          ),
+                        );
+                      }),
                     ),
+
                     const SizedBox(height: 28),
-                    CustomButton(
-                      onTap: () {
-                        _showSuccessSheet(context);
-                        Future.delayed(const Duration(seconds: 1), () {
-                          Navigator.push(
-                              context,
-                              PageTransition(
-                                  child: const SignInScreen(),
-                                  type: PageTransitionType.rightToLeft));
-                        });
-                      },
-                      // otpVerification,
-                      title: 'Verify OTP',
-                    ),
+                    // CustomButton(
+                    //   onTap: () async {
+                    //     await otpVerification();
+                    //     // _showSuccessSheet(context);
+                    //     // Future.delayed(const Duration(seconds: 1), () {
+                    //     //   Navigator.push(
+                    //     //       context,
+                    //     //       PageTransition(
+                    //     //           child: const SignInScreen(),
+                    //     //           type: PageTransitionType.rightToLeft));
+                    //     // });
+                    //   },
+                    //   // otpVerification,
+                    //   title: 'Verify OTP',
+                    // ),
                     const Spacer(),
                   ],
                 ),

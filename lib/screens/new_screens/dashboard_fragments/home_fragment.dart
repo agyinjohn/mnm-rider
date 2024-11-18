@@ -52,7 +52,7 @@ class _HomeFragmentState extends ConsumerState<HomeFragment> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final theme = Theme.of(context);
-    final user = ref.read(userProvider);
+    final user = ref.read(authProvider);
 
     return SingleChildScrollView(
       child: Stack(children: [

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 // import 'package:mnm_vendor/screens/dashboard_fragments/verification_page.dart';
 import 'package:iconly/iconly.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../../commons/app_colors.dart';
 
 class ProfileFragment extends StatefulWidget {
@@ -12,6 +14,50 @@ class ProfileFragment extends StatefulWidget {
 
 class _ProfileFragmentState extends State<ProfileFragment> {
   final bool isAccountSetupComplete = true;
+  String userId = "";
+  String name = "";
+  String email = "";
+  String phoneNumber = "";
+  String role = "";
+  DateTime createdAt = DateTime.now();
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserData();
+  }
+
+  Future<void> _loadUserData() async {
+    // Retrieve token from SharedPreferences
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+
+    if (token != null) {
+      try {
+        // Decode the JWT token
+        final jwt = JwtDecoder.decode(token);
+        setState(() {
+          userId = jwt['_id'];
+          name = jwt['name'];
+          email = jwt['email'];
+          phoneNumber = jwt['phoneNumber'];
+          role = jwt['role'];
+          createdAt = DateTime.parse(jwt['created_at']);
+        });
+      } catch (e) {
+        print('Error decoding token: $e');
+      }
+    }
+  }
+
+  void _logout() async {
+    // Clear the token and navigate to the login page or home
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('x-auth-token');
+
+    // Navigate back to login or home page
+    Navigator.of(context).pushReplacementNamed('/login');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,24 +67,19 @@ class _ProfileFragmentState extends State<ProfileFragment> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        leading: Builder(
-          builder: (BuildContext context) {
-            return IconButton(
-              icon: const Icon(IconlyLight.arrow_left_2),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              tooltip: MaterialLocalizations.of(context).backButtonTooltip,
-            );
-          },
-        ),
         title: Text(
           'Profile',
           style: theme.headlineSmall?.copyWith(
             fontWeight: FontWeight.w600,
           ),
         ),
-        centerTitle: true,
+        actions: [
+          PopupMenuButton(
+            itemBuilder: (context) {
+              return [const PopupMenuItem(child: Text('Logout'))];
+            },
+          )
+        ],
       ),
       body: Stack(
         children: [
@@ -58,16 +99,16 @@ class _ProfileFragmentState extends State<ProfileFragment> {
                         width: size.width * 0.22,
                         fit: BoxFit.cover),
                     Text(
-                      'John Kwaku Agyin',
+                      name,
                       style: theme.titleSmall
                           ?.copyWith(fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      '+1234 567 890',
+                      phoneNumber,
                       style: theme.bodyMedium,
                     ),
                     Text(
-                      'johnkwakuagyin@gmail.com',
+                      email,
                       style: theme.bodyMedium,
                     ),
                   ],

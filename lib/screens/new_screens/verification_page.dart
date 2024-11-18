@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:m_n_m_rider/screens/new_screens/dashboard_fragments/dashboard_page.dart';
 // import 'package:mnm_vendor/screens/bussiness_info.dart';
 // import 'package:mnm_vendor/screens/dashboard_page.dart';
 // import 'package:mnm_vendor/screens/face_id_page.dart';
@@ -84,7 +85,7 @@ class _KycVerificationScreenState extends ConsumerState<KycVerificationScreen> {
                               context,
                               PageTransition(
                                 duration: const Duration(milliseconds: 1000),
-                                child: const RiderHomeScreen(),
+                                child: const DashboardPage(),
                                 type: PageTransitionType.rightToLeft,
                               ),
                               (route) => false);

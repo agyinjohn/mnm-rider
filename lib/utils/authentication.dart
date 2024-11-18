@@ -38,7 +38,7 @@ class Authentication {
         headers: headers,
         body: jsonEncode(body),
       )
-          .timeout(const Duration(seconds: 20), onTimeout: () {
+          .timeout(const Duration(seconds: 30), onTimeout: () {
         throw TimeoutException(
             'The connection has timed out, please try again');
       });
@@ -50,11 +50,13 @@ class Authentication {
         print(resDeco);
         return 'Signup Successful';
       } else {
+        print(jsonDecode(response.body));
         return jsonDecode(response.body)['message'];
       }
     } on TimeoutException catch (_) {
       return 'The connection has timed out, please try again';
     } catch (error) {
+      print(error);
       return 'Something went wrong please try again later';
     }
   }
