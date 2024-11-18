@@ -4,9 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:iconly/iconly.dart';
 import 'package:m_n_m_rider/screens/new_screens/dashboard_fragments/active_maps_thread/map_screen.dart';
+import 'package:m_n_m_rider/widgets/alert_dialog.dart';
 import 'package:m_n_m_rider/widgets/custom_button.dart';
 import '../../../../commons/app_colors.dart';
 import '../../../../models/order_item.dart';
+import '../../../../utils/data.dart';
 import '../../../../widgets/custom_bottom_sheet.dart';
 import '../../../../widgets/order_item_detail.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -58,57 +60,14 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
     return LatLng(position.latitude, position.longitude);
   }
 
-  CameraPosition _initialPosition = const CameraPosition(
+  final CameraPosition _initialPosition = const CameraPosition(
     target: LatLng(6.7296388965779785, -1.6601084660966479),
     zoom: 16,
   );
 
-  final List<OrderItem> _orderItems = [
-    OrderItem(
-        orderId: '0001',
-        customerName: 'John Doe',
-        totalAmount: 160,
-        description: '2x Burger'),
-    OrderItem(
-        orderId: '0002',
-        customerName: 'Jane Smith',
-        totalAmount: 200,
-        description: '1x Pizza'),
-    OrderItem(
-        orderId: '0001',
-        customerName: 'John Doe',
-        totalAmount: 160,
-        description: '2x Burger'),
-    OrderItem(
-        orderId: '0001',
-        customerName: 'John Doe',
-        totalAmount: 160,
-        description: '2x Burger'),
-    OrderItem(
-        orderId: '0001',
-        customerName: 'John Doe',
-        totalAmount: 160,
-        description: '2x Burger'),
-    OrderItem(
-        orderId: '0001',
-        customerName: 'John Doe',
-        totalAmount: 160,
-        description: '2x Burger'),
-    OrderItem(
-        orderId: '0001',
-        customerName: 'John Doe',
-        totalAmount: 160,
-        description: '2x Burger'),
-    OrderItem(
-        orderId: '0003',
-        customerName: 'Alice Johnson',
-        totalAmount: 80,
-        description: '3x Salad'),
-  ];
-
   void _toggleView(int index) {
     setState(() {
-      _orderItems[index].isCompact = !_orderItems[index].isCompact;
+      orderItems[index].isCompact = !orderItems[index].isCompact;
     });
   }
 
@@ -119,39 +78,23 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
   bool _isBottomSheetVisible = false;
 
   void confirmOrderCollection(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Confirm Collection'),
-          content: const Text(
-              'Do you confirm the collection of the item from the store?'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text(
-                'No',
-                style: TextStyle(color: AppColors.errorColor),
-              ),
-            ),
-            TextButton(
-              onPressed: () {
-                setState(() {
-                  isOrderCollected = true;
-                });
-                Navigator.of(context).pop();
-              },
-              child: const Text(
-                'Yes',
-                style: TextStyle(color: Colors.green),
-              ),
-            ),
-          ],
-        );
-      },
-    );
+    showCustomAlertDialog(
+        context: context,
+        title: 'Confirm Collection',
+        body: const Text(
+            'Do you confirm the collection of the item from the store?'),
+        leftButtonText: 'No',
+        rightButtonText: 'Yes',
+        onTapLeft: () {
+          // Navigator.of(context).pop();
+        },
+        onTapRight: () {
+          setState(() {
+            isOrderCollected = true;
+            showSuccessSheet(context);
+          });
+          Navigator.of(context).pop();
+        });
   }
 
   void showSuccessSheet(BuildContext context) {
@@ -184,39 +127,23 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
   }
 
   void confirmOrderDelivery(BuildContext context) {
-    showDialog(
+    showCustomAlertDialog(
       context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Confirm Delivery'),
-          content: const Text(
-              'Do you confirm the delivery of the item to the customer?'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text(
-                'No',
-                style: TextStyle(color: AppColors.errorColor),
-              ),
-            ),
-            TextButton(
-              onPressed: () {
-                setState(() {
-                  isOrderDelivered = true;
-                  // _isBottomSheetVisible = true;
-                  Navigator.of(context).pop(); // Close the dialog
-                  showSuccessSheet(context);
-                });
-              },
-              child: const Text(
-                'Yes',
-                style: TextStyle(color: Colors.green),
-              ),
-            ),
-          ],
-        );
+      title: 'Confirm Delivery',
+      body: const Text(
+          'Do you confirm the delivery of the item to the customer?'),
+      leftButtonText: 'No',
+      rightButtonText: 'Yes',
+      onTapLeft: () {
+        Navigator.of(context).pop();
+      },
+      onTapRight: () {
+        setState(() {
+          isOrderDelivered = true;
+
+          Navigator.of(context).pop(); // Close the dialog
+          showSuccessSheet(context);
+        });
       },
     );
   }
@@ -340,8 +267,8 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
 
                     // Render the list of order items
                     Column(
-                      children: List.generate(_orderItems.length, (index) {
-                        final item = _orderItems[index];
+                      children: List.generate(orderItems.length, (index) {
+                        final item = orderItems[index];
                         return Column(
                           children: [
                             item.isCompact

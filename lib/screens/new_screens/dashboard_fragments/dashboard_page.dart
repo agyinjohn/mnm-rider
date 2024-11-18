@@ -28,15 +28,9 @@ class _DashboardPageState extends State<DashboardPage> {
       'label': 'Home',
       'fragment': const HomeFragment(),
     },
-    // {
-    //   'icon': SvgPicture.asset('assets/images/motor-scooter.svg'),
-    //   'icon_active': SvgPicture.asset('assets/images/motor-scooter-bold.svg'),
-    //   'label': 'Orders',
-    //   'fragment': const OrdersFragment(),
-    // },
     {
-      'icon': const Icon(Icons.star),
-      'icon_active': const Icon(IconlyBold.star),
+      'icon': const Icon(Icons.delivery_dining_outlined),
+      'icon_active': const Icon(Icons.delivery_dining_rounded),
       'label': 'Orders',
       'fragment': const OrdersFragment(),
     },

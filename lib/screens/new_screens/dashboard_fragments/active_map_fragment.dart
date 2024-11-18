@@ -7,6 +7,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:m_n_m_rider/screens/new_screens/dashboard_fragments/dashboard_page.dart';
 import 'package:m_n_m_rider/screens/new_screens/dashboard_fragments/orders_thread/order_details_page.dart';
 import 'package:m_n_m_rider/screens/new_screens/swipe_to_confirm.dart';
+import 'package:m_n_m_rider/widgets/alert_dialog.dart';
 
 import '../../../commons/app_colors.dart';
 import '../../../widgets/custom_button.dart';
@@ -120,20 +121,63 @@ class _ActiveMapFragmentState extends State<ActiveMapFragment> {
                   setState(() {
                     Navigator.pop(context);
                     _isNewOrder = true;
-                    Navigator.pushReplacement(
+                    Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) => SwipeToConfirm(
                           onConfirm: () {
-                            Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const OrderDetailPage(
-                                    orderNumber: '0002',
-                                    number: '0243678745',
-                                    customerName: 'John Agyin',
-                                  ),
-                                ));
+                            showCustomAlertDialog(
+                                context: context,
+                                title: 'Do you want to accept this order?',
+                                body: Row(
+                                  children: [
+                                    const Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
+                                      children: [
+                                        Text('Order ID:'),
+                                        Text('Item:'),
+                                        Text('Pick Up Location:'),
+                                        Text('Delivery Location:'),
+                                      ],
+                                    ),
+                                    SizedBox(width: size.width * 0.04),
+                                    const Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text('#0001'),
+                                        Text('2x Classic..',
+                                            overflow: TextOverflow.ellipsis),
+                                        Text('KFC (KNUS..',
+                                            overflow: TextOverflow.ellipsis),
+                                        Text('Kotei (..',
+                                            overflow: TextOverflow.ellipsis),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                                leftButtonText: 'No',
+                                rightButtonText: 'Yes',
+                                onTapLeft: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const DashboardPage()));
+                                },
+                                onTapRight: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            const OrderDetailPage(
+                                          orderNumber: '0002',
+                                          number: '0243678745',
+                                          customerName: 'John Agyin',
+                                        ),
+                                      ));
+                                });
                           },
                         ),
                       ),
