@@ -98,7 +98,7 @@ class _BussinessInfoState extends State<BussinessInfo> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Business Info'),
+        title: const Text('Operation Info'),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
@@ -106,7 +106,7 @@ class _BussinessInfoState extends State<BussinessInfo> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              'Register your business',
+              'Register your operation',
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
@@ -120,15 +120,15 @@ class _BussinessInfoState extends State<BussinessInfo> {
               controller: _businessNameController,
               decoration: const InputDecoration(
                 filled: true,
-                hintText: 'Business name',
-                prefixIcon: Icon(Icons.business),
+                hintText: 'Username',
+                prefixIcon: Icon(Icons.motorcycle),
                 border: OutlineInputBorder(),
               ),
             ),
             const SizedBox(height: 16),
             // Business type dropdown
             DropdownButtonFormField<String>(
-              items: ['Retail', 'Food', 'Services', 'Technology']
+              items: ['Accra', 'Food', 'Services', 'Technology']
                   .map((type) => DropdownMenuItem(
                         value: type,
                         child: Text(type),

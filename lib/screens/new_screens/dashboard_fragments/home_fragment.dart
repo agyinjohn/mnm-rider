@@ -1,15 +1,17 @@
 import 'dart:ui';
 
-import 'package:flutter/cupertino.dart';
+import 'package:badges/badges.dart' as badges;
+import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:iconly/iconly.dart';
 import 'package:m_n_m_rider/widgets/custom_button.dart';
-import 'package:nuts_activity_indicator/nuts_activity_indicator.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
+
 import '../../../commons/app_colors.dart';
 import '../../../utils/providers/user_provider.dart';
 import '../../../widgets/custom_bottom_sheet.dart';
-import '../../../widgets/order_list_card.dart';
 
 class HomeFragment extends ConsumerStatefulWidget {
   const HomeFragment({super.key});
@@ -19,6 +21,11 @@ class HomeFragment extends ConsumerStatefulWidget {
 }
 
 class _HomeFragmentState extends ConsumerState<HomeFragment> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
   bool isAvailable = false;
   bool _isBottomSheetVisible = false;
   bool confirmedOffline = false;
@@ -88,7 +95,7 @@ class _HomeFragmentState extends ConsumerState<HomeFragment> {
                           ),
                           SizedBox(width: size.width * 0.014),
                           CircleAvatar(
-                            radius: size.width * 0.018,
+                            radius: size.width * 0.024,
                             backgroundColor:
                                 const Color.fromARGB(255, 16, 145, 56),
                             child: CircleAvatar(
@@ -105,6 +112,24 @@ class _HomeFragmentState extends ConsumerState<HomeFragment> {
                     ],
                   ),
                   const Spacer(),
+                  badges.Badge(
+                    badgeContent: (const Text(
+                      '3',
+                      style: TextStyle(color: AppColors.onPrimaryColor),
+                    )),
+                    badgeStyle: const badges.BadgeStyle(
+                      badgeColor: AppColors.primaryColor,
+                    ),
+                    position: BadgePosition.topEnd(top: -10, end: -6),
+                    child: GestureDetector(
+                      onTap: () =>
+                          Navigator.pushNamed(context, '/notifications-page'),
+                      child: const Icon(
+                        IconlyLight.notification,
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: size.width * 0.01),
                   GestureDetector(
                     onTap: () {},
                     child: Container(
@@ -179,7 +204,7 @@ class _HomeFragmentState extends ConsumerState<HomeFragment> {
                   ),
                 ),
               ),
-              SizedBox(height: size.height * 0.018),
+              SizedBox(height: size.height * 0.024),
               Text(
                 'Earnings Summary',
                 style: theme.textTheme.titleMedium,
@@ -268,7 +293,13 @@ class _HomeFragmentState extends ConsumerState<HomeFragment> {
                   ),
                 ),
               ),
-              SizedBox(height: size.height * 0.018),
+              SizedBox(height: size.height * 0.024),
+              CustomButton(
+                  onTap: () {
+                    Navigator.pushNamed(context, '/request-withdrawal');
+                  },
+                  title: 'Request Withdrawal'),
+              SizedBox(height: size.height * 0.024),
               Text(
                 'Orders Summary',
                 style: theme.textTheme.titleMedium,
@@ -331,17 +362,17 @@ class _HomeFragmentState extends ConsumerState<HomeFragment> {
                       ],
                     )),
               ),
-              SizedBox(height: size.height * 0.018),
-              Text(
-                'Pending Orders',
-                style: theme.textTheme.titleMedium,
-              ),
-              SizedBox(height: size.height * 0.015),
-              OrderListCard(
-                  orderId: '0001',
-                  pickUp: 'KFC (KNUST)',
-                  dropOff: 'Celia Royal',
-                  totalAmount: 100.00),
+
+              // Text(
+              //   'Pending Orders',
+              //   style: theme.textTheme.titleMedium,
+              // ),
+              // SizedBox(height: size.height * 0.015),
+              // OrderListCard(
+              //     orderId: '0001',
+              //     pickUp: 'KFC (KNUST)',
+              //     dropOff: 'Celia Royal',
+              //     totalAmount: 100.00),
             ],
           ),
         ),

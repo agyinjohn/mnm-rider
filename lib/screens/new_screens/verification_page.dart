@@ -1,17 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:m_n_m_rider/screens/new_screens/dashboard_fragments/dashboard_page.dart';
-// import 'package:mnm_vendor/screens/bussiness_info.dart';
-// import 'package:mnm_vendor/screens/dashboard_page.dart';
-// import 'package:mnm_vendor/screens/face_id_page.dart';
-// import 'package:mnm_vendor/screens/upload_id_page.dart';
+import 'package:m_n_m_rider/screens/new_screens/face_id_page.dart';
+import 'package:m_n_m_rider/screens/new_screens/upload_id_page.dart';
+
 import 'package:page_transition/page_transition.dart';
 
 import '../../utils/providers/provider.dart';
 import '../../widgets/bussiness_info.dart';
-import 'face_id_page.dart';
-import 'home_page.dart';
-import 'upload_id_page.dart';
+import '../../widgets/custom_button.dart';
 
 class KycVerificationScreen extends ConsumerStatefulWidget {
   const KycVerificationScreen({super.key});
@@ -25,80 +22,88 @@ class _KycVerificationScreenState extends ConsumerState<KycVerificationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
     final completedSteps = ref.watch(stepStateProvider);
     return Scaffold(
       body: SafeArea(
         child: Column(
           children: [
-            SizedBox(height: size.height * 0.04),
+            const SizedBox(height: 20),
             _buildSegmentedProgressBar(completedSteps),
-            SizedBox(height: size.height * 0.04),
+            const SizedBox(height: 20),
             Expanded(
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: size.height * 0.025),
+                padding: const EdgeInsets.symmetric(horizontal: 24.0),
                 child: ListView(
                   children: [
+                    const SizedBox(height: 24),
                     Center(
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(12),
-                        child: Image.asset(
-                          'assets/images/ID Card.gif',
-                          height: size.height * 0.4,
-                          fit: BoxFit.cover,
-                        ),
+                      child: Image.asset(
+                        'assets/images/ID Card.gif', // Placeholder image
+                        height: 200,
                       ),
                     ),
-                    SizedBox(height: size.height * 0.04),
+                    const SizedBox(height: 24),
                     const Text(
                       "Let's verify your identity",
                       style:
                           TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                       textAlign: TextAlign.center,
                     ),
-                    SizedBox(height: size.height * 0.008),
+                    const SizedBox(height: 10),
                     const Text(
                       "Please upload these documents to verify your KYC.",
                       style: TextStyle(fontSize: 16, color: Colors.grey),
                       textAlign: TextAlign.center,
                     ),
-                    SizedBox(height: size.height * 0.008),
+                    const SizedBox(height: 30),
+                    _buildStepItem(0, 'Enter your operational info.',
+                        'assets/images/image 37.png', BussinessInfo.routeName),
                     _buildStepItem(
-                        0,
+                        1,
                         'Take a picture of your Ghana Card.',
                         'assets/images/image 35.png',
                         IDVerificationScreen.routeName),
                     _buildStepItem(
-                        1,
+                        2,
                         'Take a picture of your face.',
                         'assets/images/image 37.png',
                         FaceDetectionPage.routeName),
-                    _buildStepItem(2, 'Enter your business info.',
-                        'assets/images/image 37.png', BussinessInfo.routeName),
-                    SizedBox(height: size.height * 0.028),
-                    Center(
-                      child: GestureDetector(
-                        onTap: () {
-                          // Navigate to the "Why is this needed?" info page
+                    const SizedBox(height: 30),
+                    if (completedSteps[0] &&
+                        completedSteps[1] &&
+                        completedSteps[2])
+                      CustomButton(
+                          onTap: () {
+                            Navigator.pushNamedAndRemoveUntil(
+                                context, DashboardPage.routeName, (r) => false);
+                          },
+                          title: 'Finish'),
+                    if (!completedSteps[0] &&
+                        !completedSteps[1] &&
+                        !completedSteps[2])
+                      Center(
+                        child: GestureDetector(
+                          onTap: () {
+                            // Navigate to the "Why is this needed?" info page
 
-                          Navigator.pushAndRemoveUntil(
-                              context,
-                              PageTransition(
-                                duration: const Duration(milliseconds: 1000),
-                                child: const DashboardPage(),
-                                type: PageTransitionType.rightToLeft,
-                              ),
-                              (route) => false);
-                        },
-                        child: const Text(
-                          'Skip for now',
-                          style: TextStyle(
-                              color: Colors.orange,
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold),
+                            Navigator.pushAndRemoveUntil(
+                                context,
+                                PageTransition(
+                                  duration: const Duration(milliseconds: 1000),
+                                  child: const DashboardPage(),
+                                  type: PageTransitionType.rightToLeft,
+                                ),
+                                (route) => false);
+                          },
+                          child: const Text(
+                            'Skip for now',
+                            style: TextStyle(
+                                color: Colors.orange,
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold),
+                          ),
                         ),
                       ),
-                    ),
                   ],
                 ),
               ),
@@ -111,28 +116,22 @@ class _KycVerificationScreenState extends ConsumerState<KycVerificationScreen> {
 
   // Custom segmented progress bar with gaps
   Widget _buildSegmentedProgressBar(List<bool> completedSteps) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 12),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Expanded(
-              child: _buildProgressSegment(isCompleted: completedSteps[0])),
-          _buildProgressGap(),
-          Expanded(
-              child: _buildProgressSegment(isCompleted: completedSteps[1])),
-          _buildProgressGap(),
-          Expanded(
-              child: _buildProgressSegment(isCompleted: completedSteps[2])),
-        ],
-      ),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        _buildProgressSegment(isCompleted: completedSteps[0]),
+        _buildProgressGap(),
+        _buildProgressSegment(isCompleted: completedSteps[1]),
+        _buildProgressGap(),
+        _buildProgressSegment(isCompleted: completedSteps[2]),
+      ],
     );
   }
 
   // Function to build individual progress segment
   Widget _buildProgressSegment({required bool isCompleted}) {
     return Container(
-      // width: 80,
+      width: 80,
       height: 8,
       decoration: BoxDecoration(
         color: isCompleted ? Colors.orange : Colors.grey[300],
@@ -150,8 +149,9 @@ class _KycVerificationScreenState extends ConsumerState<KycVerificationScreen> {
   Widget _buildStepItem(
       int index, String title, String iconPath, String routeName) {
     final completedSteps = ref.watch(stepStateProvider);
+    bool isDisabled = (index > 0 && !completedSteps[index - 1]);
     return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
+      padding: const EdgeInsets.all(8.0),
       child: Container(
         decoration: BoxDecoration(
           color: Colors.grey.withOpacity(0.5),
@@ -162,10 +162,16 @@ class _KycVerificationScreenState extends ConsumerState<KycVerificationScreen> {
           title: Text(title),
           trailing: completedSteps[index]
               ? const Icon(Icons.check_circle, color: Colors.green)
-              : const Icon(Icons.arrow_forward_ios, color: Colors.grey),
-          onTap: () {
-            Navigator.pushNamed(context, routeName);
-          },
+              : Icon(
+                  isDisabled
+                      ? Icons.lock_outline // Show lock icon if disabled
+                      : Icons.arrow_forward_ios,
+                  color: Colors.grey),
+          onTap: isDisabled || completedSteps[index]
+              ? null
+              : () {
+                  Navigator.pushNamed(context, routeName);
+                },
         ),
       ),
     );

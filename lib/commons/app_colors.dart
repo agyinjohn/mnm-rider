@@ -10,9 +10,9 @@ class AppColors {
   static const Color backgroundColor = Color.fromARGB(255, 240, 240, 240);
   static const Color buttonHoverColor = Color(0xFFFF7F50);
 
-  static const String baseUrl = 'http:// 192.168.144.58:8000/api';
-  static const String baseURL = 'http:// 192.168.144.58:8000/vendor';
-  static const String url = 'http:// 192.168.144.58:8000';
+  static const String baseUrl = 'http://192.168.158.58:8000/api';
+  static const String baseURL = 'http://192.168.158.58:8000/vendor';
+  static const String url = 'http://192.168.158.58:8000';
 
   static const Color cardColor = Color.fromARGB(255, 217, 217, 217);
   static const Color errorColor = Color(0xFFB00020);

@@ -3,14 +3,17 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:m_n_m_rider/screens/new_screens/on_boarding_screen.dart';
-import 'package:m_n_m_rider/screens/new_screens/sign_in_screen.dart';
-import 'package:m_n_m_rider/utils/providers/user_provider.dart';
+import 'package:m_n_m_rider/screens/new_screens/verification_page.dart';
 import 'package:m_n_m_rider/utils/routes.dart';
 import 'package:nuts_activity_indicator/nuts_activity_indicator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'screens/new_screens/dashboard_fragments/dashboard_page.dart';
 
-void main() {
+import 'screens/new_screens/dashboard_fragments/dashboard_page.dart';
+import 'screens/new_screens/sign_in_screen.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  // await LocationService.startService();
   runApp(const ProviderScope(child: MyApp()));
 }
 

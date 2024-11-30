@@ -1,18 +1,11 @@
 // import 'dart:ui';
 
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
-
 import '../../commons/app_colors.dart';
 import '../../widgets/custom_bottom_sheet.dart';
 import '../../widgets/custom_button.dart';
 import '../../widgets/custom_textfield.dart';
-// import 'package:mnm_vendor/widgets/custom_bottom_sheet.dart';
-// import '../app_colors.dart';
-// import '../widgets/custom_button.dart';
-// import '../widgets/custom_textfield.dart';
-// import '../widgets/custom_textfield.dart';
 
 class ChangePasswordScreen extends StatefulWidget {
   const ChangePasswordScreen({super.key});
@@ -24,27 +17,27 @@ class ChangePasswordScreen extends StatefulWidget {
 class _OTPScreenState extends State<ChangePasswordScreen> {
   @override
   Widget build(BuildContext context) {
-    final List<FocusNode> _focusNodes = List.generate(6, (_) => FocusNode());
-    final List<TextEditingController> _controllers =
+    final List<FocusNode> focusNodes = List.generate(6, (_) => FocusNode());
+    final List<TextEditingController> controllers =
         List.generate(6, (_) => TextEditingController());
 
-    void _nextField(String value, int index) {
+    void nextField(String value, int index) {
       if (value.length == 1 && index < 5) {
-        _focusNodes[index].unfocus();
-        FocusScope.of(context).requestFocus(_focusNodes[index + 1]);
+        focusNodes[index].unfocus();
+        FocusScope.of(context).requestFocus(focusNodes[index + 1]);
       }
       if (value.length == 1 && index == 5) {
-        _focusNodes[index].unfocus();
+        focusNodes[index].unfocus();
       }
     }
 
     final size = MediaQuery.of(context).size;
 
-    bool _isBottomSheetVisible = false;
+    bool isBottomSheetVisible = false;
 
     void showSuccessSheet(BuildContext context) {
       setState(() {
-        _isBottomSheetVisible = true;
+        isBottomSheetVisible = true;
       });
 
       showModalBottomSheet(
@@ -60,7 +53,7 @@ class _OTPScreenState extends State<ChangePasswordScreen> {
         ),
       ).whenComplete(() {
         setState(() {
-          _isBottomSheetVisible = false;
+          isBottomSheetVisible = false;
         });
       });
 
@@ -149,7 +142,7 @@ class _OTPScreenState extends State<ChangePasswordScreen> {
           ),
 
           // Blur effect when the bottom sheet is visible
-          if (_isBottomSheetVisible)
+          if (isBottomSheetVisible)
             BackdropFilter(
               filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
               child: Container(

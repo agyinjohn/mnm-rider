@@ -9,7 +9,7 @@ android {
     namespace = "com.example.m_n_m_rider"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
-
+    // namespace 'background_locator_2'
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
